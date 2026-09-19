@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Product } from "../types/Product";
 import { fetchAllProducts } from "../data/apiData";
 import ProductCard from "../components/ProductCard";
+import Header from "../components/Header";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,20 +13,16 @@ export default function Home() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        renderItem={({ item }) => <ProductCard product={item} />}
-      />
+    <View style={{flex: 1}}>
+      <Header />
+      <View style={{paddingHorizontal: 10, flex: 1}}>
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          renderItem={({ item }) => <ProductCard product={item} />}
+        />
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 8,
-  },
-});
