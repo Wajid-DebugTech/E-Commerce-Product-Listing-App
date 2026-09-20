@@ -31,7 +31,10 @@ export default function Home() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header onSearchPress={() => setSearchVisible(!searchVisible)} />
+      <Header
+        leftIcon="search"
+        onLeftPress={() => setSearchVisible(!searchVisible)}
+      />
       <View style={{ paddingHorizontal: 10, flex: 1 }}>
         <FlatList
           data={filteredProducts}

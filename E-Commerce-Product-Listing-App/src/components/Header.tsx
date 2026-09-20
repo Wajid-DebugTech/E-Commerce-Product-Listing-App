@@ -3,11 +3,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeaderProps {
-  onSearchPress?: () => void;
+  leftIcon?: keyof typeof Ionicons.glyphMap;
+  onLeftPress?: () => void;
   onCartPress?: () => void;
 }
 
-export default function Header({ onSearchPress, onCartPress }: HeaderProps) {
+export default function Header({ leftIcon = "home", onLeftPress, onCartPress }: HeaderProps) {
   return (
     <View
       style={{
@@ -20,8 +21,8 @@ export default function Header({ onSearchPress, onCartPress }: HeaderProps) {
         paddingHorizontal: 20,
       }}
     >
-      <TouchableOpacity style={styles.button} onPress={onSearchPress}>
-        <Ionicons name="search" size={36} color="#fff" />
+      <TouchableOpacity style={styles.button} onPress={onLeftPress}>
+        <Ionicons name={leftIcon} size={36} color="#fff" />
       </TouchableOpacity>
 
       <View style={{ flex: 1 }}>

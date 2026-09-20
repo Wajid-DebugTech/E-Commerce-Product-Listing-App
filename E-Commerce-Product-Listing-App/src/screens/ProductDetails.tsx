@@ -1,9 +1,10 @@
 import { View, Text } from "react-native";
+import Header from "../components/Header";
 
 export default function ProductDetails() {
   return (
     <View>
-      <Text>Product Details</Text>
+      <Header onLeftPress={() => navigation.navigate("Home")} />
     </View>
   );
 }
