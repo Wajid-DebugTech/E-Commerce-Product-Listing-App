@@ -5,26 +5,33 @@ import { fetchAllProducts, fetchCategories } from "../data/apiData";
 import ProductCard from "../components/ProductCard";
 import Header from "../components/Header";
 import CategoryChip from "../components/CategoryChip";
+import SearchBar from "../components/SearchBar";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const categoryChipMargin = 50; // leaves a margin of space for the category chips to live in, and also so that they don't overlap with the products listing
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchAllProducts().then(setProducts);
     fetchCategories().then(setCategories);
   }, []);
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory =
+      selectedCategory === "All" || p.category === selectedCategory;
+    const matchesSearch = p.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <View style={{ flex: 1 }}>
-      <Header />
+      <Header onSearchPress={() => setSearchVisible(!searchVisible)} />
       <View style={{ paddingHorizontal: 10, flex: 1 }}>
         <FlatList
           data={filteredProducts}
@@ -68,6 +75,12 @@ export default function Home() {
               />
             ))}
           </ScrollView>
+
+          {searchVisible && (
+            <View style={{ position: "absolute", top: 56, left: 0, right: 0 }}>
+              <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+            </View>
+          )}
         </View>
       </View>
     </View>
