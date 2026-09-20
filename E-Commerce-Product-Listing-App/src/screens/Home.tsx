@@ -2,12 +2,19 @@ import { View, FlatList, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { Product } from "../types/Product";
 import { fetchAllProducts, fetchCategories } from "../data/apiData";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/navigation";
 import ProductCard from "../components/ProductCard";
 import Header from "../components/Header";
 import CategoryChip from "../components/CategoryChip";
 import SearchBar from "../components/SearchBar";
 
+// the header handles a lot of navigation but this is needed here so that tapping a product brings you to its details page
+type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export default function Home() {
+  const navigation = useNavigation<HomeNavigationProp>();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -40,7 +47,14 @@ export default function Home() {
           data={filteredProducts}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
-          renderItem={({ item }) => <ProductCard product={item} />}
+          renderItem={({ item }) => (
+            <ProductCard
+              product={item}
+              onPress={() =>
+                navigation.navigate("ProductDetails", { productId: item.id })
+              }
+            />
+          )}
           contentContainerStyle={{ paddingTop: categoryChipMargin }}
         />
 

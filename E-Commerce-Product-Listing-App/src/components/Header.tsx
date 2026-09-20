@@ -1,6 +1,11 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/navigation";
+
+type HeaderNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface HeaderProps {
   leftIcon?: keyof typeof Ionicons.glyphMap;
@@ -8,7 +13,17 @@ interface HeaderProps {
   onCartPress?: () => void;
 }
 
-export default function Header({ leftIcon = "home", onLeftPress, onCartPress }: HeaderProps) {
+export default function Header({
+  leftIcon = "home",
+  onLeftPress,
+  onCartPress,
+}: HeaderProps) {
+  const navigation = useNavigation<HeaderNavigationProp>();
+
+  // nullish coalesce to allow overrides via HeaderProps while keeping a default action for the buttons
+  const handleLeftPress = onLeftPress ?? (() => navigation.popToTop());
+  const handleCartPress = onCartPress ?? (() => navigation.navigate("Cart"));
+
   return (
     <View
       style={{
@@ -21,7 +36,7 @@ export default function Header({ leftIcon = "home", onLeftPress, onCartPress }: 
         paddingHorizontal: 20,
       }}
     >
-      <TouchableOpacity style={styles.button} onPress={onLeftPress}>
+      <TouchableOpacity style={styles.button} onPress={handleLeftPress}>
         <Ionicons name={leftIcon} size={36} color="#fff" />
       </TouchableOpacity>
 
@@ -30,7 +45,7 @@ export default function Header({ leftIcon = "home", onLeftPress, onCartPress }: 
         <Text style={styles.subtitle}>Buy Good Stuff from BuyStuff</Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onCartPress}>
+      <TouchableOpacity style={styles.button} onPress={handleCartPress}>
         <Ionicons name="cart" size={36} color="#fff" />
       </TouchableOpacity>
     </View>
