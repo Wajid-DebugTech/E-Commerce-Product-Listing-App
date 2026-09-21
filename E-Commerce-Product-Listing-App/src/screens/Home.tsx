@@ -9,6 +9,8 @@ import ProductCard from "../components/ProductCard";
 import Header from "../components/Header";
 import CategoryChip from "../components/CategoryChip";
 import SearchBar from "../components/SearchBar";
+import { useCart } from "../context/CartContext";
+import Notification from "../components/Notification";
 
 // the header handles a lot of navigation but this is needed here so that tapping a product brings you to its details page
 type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -20,7 +22,10 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const categoryChipMargin = 50; // leaves a margin of space for the category chips to live in so that they don't overlap with the products listing
   const [searchVisible, setSearchVisible] = useState(false);
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const { addItem } = useCart();
 
   useEffect(() => {
     fetchAllProducts().then(setProducts);
@@ -56,6 +61,11 @@ export default function Home() {
               onPress={() =>
                 navigation.navigate("ProductDetails", { productId: item.id })
               }
+              onAddToCart={() => {
+                addItem(item, 1);
+                setNotificationMessage('Added to Cart: ' + item.title);
+                setNotificationVisible(true);
+              }}
             />
           )}
           contentContainerStyle={{ paddingTop: categoryChipMargin }}
@@ -105,6 +115,12 @@ export default function Home() {
           )}
         </View>
       </View>
+
+      <Notification
+        message={notificationMessage}
+        visible={notificationVisible}
+        onHide={() => setNotificationVisible(false)}
+      />
     </View>
   );
 }

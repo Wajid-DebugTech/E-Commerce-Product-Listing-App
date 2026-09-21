@@ -15,6 +15,7 @@ import { fetchProductById } from "../data/apiData";
 import Header from "../components/Header";
 import QuantitySelector from "../components/QuantitySelector";
 import { useCart } from "../context/CartContext";
+import Notification from "../components/Notification";
 
 type ProductDetailsRouteProp = RouteProp<RootStackParamList, "ProductDetails">;
 
@@ -27,6 +28,7 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [notificationVisible, setNotificationVisible] = useState(false);
 
   // loading and error handling (i.e. detecting 400 errors and notifying the user)
   useEffect(() => {
@@ -81,6 +83,7 @@ export default function ProductDetails() {
             onPress={() => {
               if (product) {
                 addItem(product, quantity);
+                setNotificationVisible(true);
               }
             }}
           >
@@ -88,6 +91,11 @@ export default function ProductDetails() {
           </TouchableOpacity>
         </ScrollView>
       )}
+      <Notification
+        message={`Added ${quantity}x to Cart: ${product?.title}`}
+        visible={notificationVisible}
+        onHide={() => setNotificationVisible(false)}
+      />
     </View>
   );
 }
