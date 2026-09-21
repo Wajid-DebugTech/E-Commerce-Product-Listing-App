@@ -18,7 +18,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const categoryChipMargin = 50; // leaves a margin of space for the category chips to live in, and also so that they don't overlap with the products listing
+  const categoryChipMargin = 50; // leaves a margin of space for the category chips to live in so that they don't overlap with the products listing
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -38,10 +38,13 @@ export default function Home() {
 
   return (
     <View style={{ flex: 1 }}>
+      {/*Header component*/}
       <Header
         leftIcon="search"
         onLeftPress={() => setSearchVisible(!searchVisible)}
       />
+
+      {/*Product listing*/}
       <View style={{ paddingHorizontal: 10, flex: 1 }}>
         <FlatList
           data={filteredProducts}
@@ -58,6 +61,7 @@ export default function Home() {
           contentContainerStyle={{ paddingTop: categoryChipMargin }}
         />
 
+        {/*Category chips are a horizontal-scrolling list directly below the header*/}
         <View
           style={{
             position: "absolute",
@@ -93,6 +97,7 @@ export default function Home() {
             ))}
           </ScrollView>
 
+          {/*Search bar component, hovers above other page contents while it is visible*/}
           {searchVisible && (
             <View style={{ position: "absolute", top: 56, left: 0, right: 0 }}>
               <SearchBar value={searchQuery} onChangeText={setSearchQuery} />

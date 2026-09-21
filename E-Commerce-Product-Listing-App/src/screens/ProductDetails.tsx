@@ -14,18 +14,21 @@ import { Product } from "../types/Product";
 import { fetchProductById } from "../data/apiData";
 import Header from "../components/Header";
 import QuantitySelector from "../components/QuantitySelector";
+import { useCart } from "../context/CartContext";
 
 type ProductDetailsRouteProp = RouteProp<RootStackParamList, "ProductDetails">;
 
 export default function ProductDetails() {
   const route = useRoute<ProductDetailsRouteProp>();
   const { productId } = route.params;
+  const { addItem } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  // loading and error handling (i.e. detecting 400 errors and notifying the user)
   useEffect(() => {
     setLoading(true);
     setError(false);
@@ -45,6 +48,7 @@ export default function ProductDetails() {
         </View>
       )}
 
+      {/*error notification*/}
       {!loading && (error || !product) && (
         <View style={styles.centered}>
           <Text>Something went wrong with loading this product.</Text>
@@ -72,7 +76,14 @@ export default function ProductDetails() {
             onDecrease={() => setQuantity((q) => Math.max(1, q - 1))}
           />
 
-          <TouchableOpacity style={styles.addButton} onPress={() => {}}>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => {
+              if (product) {
+                addItem(product, quantity);
+              }
+            }}
+          >
             <Text style={styles.addButtonText}>Add to Cart</Text>
           </TouchableOpacity>
         </ScrollView>
