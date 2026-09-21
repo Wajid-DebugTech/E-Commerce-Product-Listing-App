@@ -4,8 +4,6 @@ import { CartItem } from "../types/CartItem";
 
 /*
 cart data is stored within the app because the Fake Store API does not actually save data from POST and UPDATE calls.
-because this app is just a demonstration and you can't actually buy anything from it,
-I have elected not to use AsyncStorage, meaning that cart data is lost (does not persist) upon closing the app
 */
 
 interface CartState {
